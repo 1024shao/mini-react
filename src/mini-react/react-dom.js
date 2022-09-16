@@ -1,104 +1,104 @@
-import { createRoot } from './fiber'
+import { createRoot } from './fiber';
+
 function render(element, container) {
-  // const dom = renderDom(element)
-  // container.appendChild(dom)
-  createRoot(element, container)
+  createRoot(element, container);
 }
 
-function renderDom(element) {
-  let dom = null
-  // 1.节点为空，直接返回
-  if (element === null || element === false) {
-    return dom
+// 将 React.Element 渲染为真实 dom
+export function renderDom(element) {
+  let dom = null; // 要返回的 dom
+
+  if (!element && element !== 0) {
+    // 条件渲染为假，返回 null
+    return null;
   }
-  // 2.节点为 number 类型
-  if (typeof element === 'number') {
-    dom = document.createTextNode(String(element))
-    return dom
-  }
-  // 3.节点为 string 类型
+
   if (typeof element === 'string') {
-    dom = document.createTextNode(element)
-    return dom
+    // 如果 element 本身为 string，返回文本节点
+    dom = document.createTextNode(element);
+    return dom;
   }
-  // // 4.节点为 数组 类型 -> 递归渲染
-  // if (Array.isArray(element)) {
-  //   // 创建空节点
-  //   dom = document.createDocumentFragment()
-  //   for (const child of element) {
-  //     const childDom = renderDom(child)
 
-  //     if (childDom) {
-  //       dom.appendChild(childDom)
-  //     }
-  //   }
-  //   return dom
-  // }
+  if (typeof element === 'number') {
+    // 如果 element 本身为 number，将其转为 string 后返回文本节点
+    dom = document.createTextNode(String(element));
+    return dom;
+  }
 
-  // 节点为一个 标签/组件 类型
   const {
     type,
     props: { children, ...attributes },
   } = element;
 
   if (typeof type === 'string') {
-    dom = document.createElement(type)
-    // } else if (typeof type === 'function') {
-    //   // 函数组件
-    //   if (type.prototype.isReactComponent) {
-    //     const { props, type: Comp } = element
-    //     const component = new Comp(props)
-
-    //     const jsx = component.render()
-
-    //     dom = renderDom(jsx)
-    //   } else {
-    //     const { props, type: Fn } = element
-
-    //     const jsx = Fn(props)
-
-    //     dom = renderDom(jsx)
-    //   }
+    // 常规 dom 节点的渲染
+    dom = document.createElement(type);
   } else if (typeof type === 'function') {
-    dom = document.createDocumentFragment()
+    // React 组件的渲染
+    dom = document.createDocumentFragment();
   } else {
-    return null
+    // 其他情况暂不考虑
+    return null;
   }
-  // if (children) {
-  //   const childrenDom = renderDom(children)
-  //   if (childrenDom) {
-  //     dom.appendChild(childrenDom)
-  //   }
-  // }
-  updateAttributes(dom, attributes)
-  return dom
+
+  updateAttributes(dom, attributes);
+
+  return dom;
 }
 
-// 更新节点的属性值
-function updateAttributes(dom, attributes) {
-  Object.keys(attributes).forEach(key => {
-    if (key.startsWith('on')) {
-      const eventName = key.substring(2).toLowerCase()
-      dom.addEventListener(eventName, attributes[key])
-    } else if (key === 'className') {
-      const classnames = attributes[key].split(' ')
-      for (const classname of classnames) {
-        dom.classList.add(classname)
+// 更新 dom 属性
+export function updateAttributes(dom, attributes, oldAttributes) {
+  if (oldAttributes) {
+    // 有旧属性，移除旧属性
+    Object.keys(oldAttributes).forEach((key) => {
+      if (key.startsWith('on')) {
+        // 移除旧事件
+        const eventName = key.slice(2).toLowerCase();
+        dom.removeEventListener(eventName, oldAttributes[key]);
+      } else if (key === 'className') {
+        // className 的处理
+        const classes = oldAttributes[key].split(' ');
+        classes.forEach((classKey) => {
+          dom.classList.remove(classKey);
+        });
+      } else if (key === 'style') {
+        // style处理
+        const style = oldAttributes[key];
+        Object.keys(style).forEach((styleName) => {
+          dom.style[styleName] = 'initial';
+        });
+      } else {
+        // 其他属性的处理
+        dom[key] = '';
       }
-    } else if (key === 'style') {
-      Object.keys(attributes[key]).forEach(item => {
-        dom.style[item] = attributes[key][item]
-      })
-    } else {
-      dom[key] = attributes[key]
-    }
-  })
-}
+    });
+  }
 
+  Object.keys(attributes).forEach((key) => {
+    if (key.startsWith('on')) {
+      // 事件的处理
+      const eventName = key.slice(2).toLowerCase();
+      dom.addEventListener(eventName, attributes[key]);
+    } else if (key === 'className') {
+      // className 的处理
+      const classes = attributes[key].split(' ');
+      classes.forEach((classKey) => {
+        dom.classList.add(classKey);
+      });
+    } else if (key === 'style') {
+      // style处理
+      const style = attributes[key];
+      Object.keys(style).forEach((styleName) => {
+        dom.style[styleName] = style[styleName];
+      });
+    } else {
+      // 其他属性的处理
+      dom[key] = attributes[key];
+    }
+  });
+}
 
 const ReactDOM = {
   render,
-  renderDom
-}
-
-export default ReactDOM
+};
+export default ReactDOM;
