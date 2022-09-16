@@ -1,6 +1,7 @@
 import { createRoot } from './fiber';
 
 function render(element, container) {
+  // console.log('-----------------element, container: ', element, container);
   createRoot(element, container);
 }
 
