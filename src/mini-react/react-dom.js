@@ -1,6 +1,8 @@
+import { createRoot } from './fiber'
 function render(element, container) {
-  const dom = renderDom(element)
-  container.appendChild(dom)
+  // const dom = renderDom(element)
+  // container.appendChild(dom)
+  createRoot(element, container)
 }
 
 function renderDom(element) {
@@ -19,19 +21,20 @@ function renderDom(element) {
     dom = document.createTextNode(element)
     return dom
   }
-  // 4.节点为 数组 类型 -> 递归渲染
-  if (Array.isArray(element)) {
-    // 创建空节点
-    dom = document.createDocumentFragment()
-    for (const child of element) {
-      const childDom = renderDom(child)
+  // // 4.节点为 数组 类型 -> 递归渲染
+  // if (Array.isArray(element)) {
+  //   // 创建空节点
+  //   dom = document.createDocumentFragment()
+  //   for (const child of element) {
+  //     const childDom = renderDom(child)
 
-      if (childDom) {
-        dom.appendChild(childDom)
-      }
-    }
-    return dom
-  }
+  //     if (childDom) {
+  //       dom.appendChild(childDom)
+  //     }
+  //   }
+  //   return dom
+  // }
+
   // 节点为一个 标签/组件 类型
   const {
     type,
@@ -40,34 +43,33 @@ function renderDom(element) {
 
   if (typeof type === 'string') {
     dom = document.createElement(type)
+    // } else if (typeof type === 'function') {
+    //   // 函数组件
+    //   if (type.prototype.isReactComponent) {
+    //     const { props, type: Comp } = element
+    //     const component = new Comp(props)
+
+    //     const jsx = component.render()
+
+    //     dom = renderDom(jsx)
+    //   } else {
+    //     const { props, type: Fn } = element
+
+    //     const jsx = Fn(props)
+
+    //     dom = renderDom(jsx)
+    //   }
   } else if (typeof type === 'function') {
-    // 函数组件
-    if (type.prototype.isReactComponent) {
-      const { props, type: Comp } = element
-      const component = new Comp(props)
-
-      const jsx = component.render()
-
-      dom = renderDom(jsx)
-    } else {
-      const { props, type: Fn } = element
-
-      const jsx = Fn(props)
-
-      dom = renderDom(jsx)
-    }
+    dom = document.createDocumentFragment()
   } else {
     return null
   }
-  if (children) {
-
-    const childrenDom = renderDom(children)
-
-    if (childrenDom) {
-      dom.appendChild(childrenDom)
-    }
-
-  }
+  // if (children) {
+  //   const childrenDom = renderDom(children)
+  //   if (childrenDom) {
+  //     dom.appendChild(childrenDom)
+  //   }
+  // }
   updateAttributes(dom, attributes)
   return dom
 }
@@ -95,7 +97,8 @@ function updateAttributes(dom, attributes) {
 
 
 const ReactDOM = {
-  render
+  render,
+  renderDom
 }
 
 export default ReactDOM
