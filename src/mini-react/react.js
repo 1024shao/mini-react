@@ -29,6 +29,7 @@ Component.prototype._UpdateProps = function (props) {
 
 export function useState(initial) {
   const currentFunctionFiber = getCurrentFunctionFiber();
+  console.log('__________________', currentFunctionFiber, '')
   const hookIndex = getHookIndex();
   // 取当前执行的函数组件之前的 hook
   const oldHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex];

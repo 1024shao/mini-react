@@ -21,6 +21,7 @@ export function getDeletions() {
 
 // 触发渲染
 export function commitRender() {
+  // console.log('4. 手动触发更新 commitRender: ');
   workInProgressRoot = {
     stateNode: currentRoot.stateNode, // 记录对应的真实 dom 节点
     element: currentRoot.element,
@@ -41,6 +42,7 @@ export function getHookIndex() {
 
 // 创建 rootFiber 作为首个 nextUnitOfWork
 export function createRoot(element, container) {
+  // console.log('0. jsx 返回的 element: ', element);
   workInProgressRoot = {
     stateNode: container, // 记录对应的真实 dom 节点
     element: {
@@ -49,11 +51,13 @@ export function createRoot(element, container) {
     },
     alternate: currentRoot,
   };
+  // console.log('1. 创建根fiber', workInProgressRoot)
   nextUnitOfWork = workInProgressRoot;
 }
 
 // 执行当前工作单元并设置下一个要执行的工作单元
 function performUnitOfWork(workInProgress) {
+  // console.log('2. 执行performUnitOfWork: ', workInProgress);
   if (!workInProgress.stateNode) {
     // 若当前 fiber 没有 stateNode，则根据 fiber 挂载的 element 的属性创建
     workInProgress.stateNode = renderDom(workInProgress.element);

@@ -40,11 +40,26 @@ function FunctionComponent(props) {
     </div>
   );
 }
+function FunctionComponentTow(props) {
+  const [count, setCount] = useState(1000);
+  const addCount = () => {
+    setCount(count + 1);
+  };
+  return (
+    <div className="function-component">
+      <h2>tow</h2>
+      <div>prop value is: {props.value}</div>
+      <div>count is: {count}</div>
+      <input type="button" value="add count" onClick={addCount} />
+    </div>
+  );
+}
 
 const jsx = (
   <div className="deep1-box">
     <ClassComponent value={666} />
     <FunctionComponent value={100} />
+    <FunctionComponentTow value={100} />
     <div className="deep2-box-1">
       <a href="https://github.com/1024shao/mini-react">mini react link</a>
       <p style={{ color: 'red' }}> this is a red p</p>

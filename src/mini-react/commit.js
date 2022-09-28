@@ -1,8 +1,10 @@
 import { updateAttributes } from './react-dom';
 import { getDeletions } from './fiber';
 
+let index = 1
 // 从根节点开始 commit
 export function commitRoot(rootFiber) {
+  console.log('3. 开始commitRoot: 当前节点本次是第', index++, rootFiber.stateNode);
   const deletions = getDeletions();
   deletions.forEach(commitWork);
 
@@ -11,6 +13,7 @@ export function commitRoot(rootFiber) {
 
 // 递归执行 commit，此过程不中断
 function commitWork(fiber) {
+  // console.log('4. 递归执行commitWork: ', fiber);
   if (!fiber) {
     return;
   }
