@@ -7,11 +7,14 @@
 这里可以参考我的这篇文章：https://juejin.cn/post/7137525368855986212
 做个简单的总结：
 16 版本
+
 - 我们书写的 JSX 都会被 Babel 进行转换
 - 通过不断的调用 React.createElement 将 JSX 转化为一个 **利于操作的** 对象
 - 在这个对象的基础上我们可以实现例如 fiber 架构，diff 算法达到性能优化的目的。最后再把其内容插入到浏览器当中去。本质上还是调用 `appendChild`
+
 17 版本
-- React 17 中不再依赖于 Babel-loader,React 从 `react/jsx-runtime` 中导入 `_jsx`对象，在大包的过程中自动将 import 语句插入到 JS 文件中。
+
+- React 17 中不再依赖于 Babel-loader,React 从 `react/jsx-runtime` 中导入 `_jsx`对象，在打包的过程中自动将 import 语句插入到 JS 文件中。
 这样有两个好处：
 - 无需引入整个 React 文件减小包的体积
 - 采用 React 去开发一套 npm 包的时候也不需要将 React 设置为 package.json 中的 dependency 依赖，以免使用这个包的用户在工程中安装了两个不同版本的 React
