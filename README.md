@@ -182,6 +182,11 @@ function useState(initial) {
 }
 ```
 
+### Todo(等待秋招结束咯)
+- 加入 schedule 调度流程
+- 合成事件
+- 将 RequestIdleCallback 替换为 MessageChannel
+
 ### Other
 
 #### 思考一下 为什么 react fiber 能实现中断呢 ？
