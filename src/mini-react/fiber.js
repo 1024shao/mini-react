@@ -165,4 +165,4 @@ function workLoop(deadline) {
   requestIdleCallback(workLoop);
 }
 
-requestIdleCallback(workLoop);
+requestIdleCallback && requestIdleCallback(workLoop);
